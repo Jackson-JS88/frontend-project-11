@@ -1,41 +1,36 @@
 import './style.css'
+import validateURL from './lib/validator.js'
+import { createView, initialState } from './lib/view.js'
 
-const app = document.getElementById('app')
+const { watchedState, elements } = createView(initialState)
 
-const formHtml = `
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <h1 class="text-center mb-4">RSS агрегатор</h1>
-      <form id="rss-form" class="card p-4">
-        <div class="mb-3">
-          <label for="rss-url" class="form-label">Начните читать RSS сегодня! Это легко, это красиво.</label>
-          <input 
-            type="text" 
-            class="form-control" 
-            id="rss-url" 
-            placeholder="Ссылка RRS" 
-            required
-          >
-        </div>
-        <button type="submit" class="btn btn-primary">Добавить</button>
-      </form>
-    </div>
-  </div>
-</div>
-`
+const resetForm = () => {
+  elements.input.value = ''
+  elements.input.focus()
+  watchedState.form.state = 'filling'
+  watchedState.form.error = null
+}
 
-app.innerHTML = formHtml
-
-const form = document.getElementById('rss-form')
-form.addEventListener('submit', (event) => {
+elements.form.addEventListener('submit', async (event) => {
   event.preventDefault()
-  const urlInput = document.getElementById('rss-url')
-  const url = urlInput.value.trim()
   
-  if (url) {
-    console.log('Adding RSS feed:', url)
-
-    urlInput.value = ''
+  const formData = new FormData(event.target)
+  const url = formData.get('url').trim()
+  
+  watchedState.form.state = 'validating'
+  
+  try {
+    await validateURL(url, watchedState.feeds)
+    
+    watchedState.form.state = 'valid'
+    watchedState.feeds.push(url)
+    
+    resetForm()
+    
+  } catch (error) {
+    watchedState.form.state = 'invalid'
+    watchedState.form.error = error.name === 'ValidationError' 
+      ? error.errors[0] 
+      : 'Произошла ошибка при валидации'
   }
 })
