@@ -29,8 +29,18 @@ elements.form.addEventListener('submit', async (event) => {
     
   } catch (error) {
     watchedState.form.state = 'invalid'
-    watchedState.form.error = error.name === 'ValidationError' 
-      ? error.errors[0] 
-      : 'Произошла ошибка при валидации'
+    
+    if (error.name === 'ValidationError') {
+      watchedState.form.error = error.errors[0]
+    } else {
+      watchedState.form.error = 'unknownError'
+    }
+  }
+})
+
+elements.input.addEventListener('input', () => {
+  if (watchedState.form.state === 'invalid') {
+    watchedState.form.state = 'filling'
+    watchedState.form.error = null
   }
 })

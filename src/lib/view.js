@@ -1,4 +1,5 @@
 import onChange from 'on-change'
+import i18next from '../i18n.js'
 
 const initialState = {
   form: {
@@ -28,19 +29,19 @@ const createView = (state) => {
       case 'validating':
         submit.disabled = true
         feedback.className = 'feedback m-0 position-absolute small text-info'
-        feedback.textContent = 'Проверяем ссылку...'
+        feedback.textContent = i18next.t('validating')
         break
       
       case 'invalid':
         input.classList.add('is-invalid')
         feedback.className = 'feedback m-0 position-absolute small text-danger'
-        feedback.textContent = formState.error
+        feedback.textContent = formState.error ? i18next.t(formState.error) : i18next.t('unknownError')
         break
       
       case 'valid':
         input.classList.add('is-valid')
         feedback.className = 'feedback m-0 position-absolute small text-success'
-        feedback.textContent = 'RSS успешно загружен'
+        feedback.textContent = i18next.t('success')
         break
       
       default:
