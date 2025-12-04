@@ -46,4 +46,8 @@ const fetchRSS = (url) => {
     })
 }
 
-export default fetchRSS
+const fetchRSSForUpdate = (url) => {
+  return fetchRSS(url)
+}
+
+export { fetchRSS, fetchRSSForUpdate }

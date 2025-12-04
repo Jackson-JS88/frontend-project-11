@@ -1,6 +1,6 @@
 import './style.css'
 import validateURL from './lib/validator.js'
-import fetchRSS from './lib/parser.js'
+import { fetchRSS, fetchRSSForUpdate } from './lib/parser.js'
 import { createView, initialState } from './lib/view.js'
 import * as bootstrap from 'bootstrap'
 
@@ -46,6 +46,36 @@ const openPostModal = (post) => {
   
   const modalInstance = new bootstrap.Modal(modal)
   modalInstance.show()
+}
+
+const updateFeeds = () => {
+  watchedState.feeds.forEach((feed) => {
+    fetchRSSForUpdate(feed.url)
+      .then((feedData) => {
+        const existingPostLinks = watchedState.posts
+          .filter(post => post.feedId === feed.id)
+          .map(post => post.link)
+        
+        const newPosts = feedData.posts
+          .filter(post => !existingPostLinks.includes(post.link))
+          .map((post, index) => ({
+            id: `${feed.id}_post_${Date.now()}_${index}`,
+            feedId: feed.id,
+            title: post.title,
+            link: post.link,
+            description: post.description,
+          }))
+        
+        if (newPosts.length > 0) {
+          watchedState.posts.unshift(...newPosts)
+        }
+      })
+      .catch((error) => {
+        console.error(`Ошибка обновления фида ${feed.url}:`, error.message)
+      })
+  })
+  
+  setTimeout(updateFeeds, 5000)
 }
 
 elements.form.addEventListener('submit', (event) => {
@@ -100,3 +130,5 @@ document.addEventListener('click', (event) => {
     }
   }
 })
+
+setTimeout(updateFeeds, 5000)
