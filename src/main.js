@@ -46,6 +46,8 @@ const openPostModal = (post) => {
   
   const modalInstance = new bootstrap.Modal(modal)
   modalInstance.show()
+  
+  watchedState.readPostsIds.add(post.id)
 }
 
 const updateFeeds = () => {
@@ -121,13 +123,20 @@ elements.input.addEventListener('input', () => {
 })
 
 document.addEventListener('click', (event) => {
+  // Обработчик кнопки "Просмотр"
   if (event.target.classList.contains('btn-outline-primary') && event.target.textContent.trim() === 'Просмотр') {
-    const postId = event.target.dataset.id
+    const postId = event.target.dataset.postId
     const post = watchedState.posts.find(p => p.id === postId)
     
     if (post) {
       openPostModal(post)
     }
+  }
+  
+  // Обработчик клика на ссылку поста
+  if (event.target.matches('.posts a[data-post-id]')) {
+    const postId = event.target.dataset.postId
+    watchedState.readPostsIds.add(postId)
   }
 })
 

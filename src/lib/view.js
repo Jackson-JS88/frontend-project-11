@@ -8,6 +8,7 @@ const initialState = {
   },
   feeds: [],
   posts: [],
+  readPostsIds: new Set(),
   loading: false,
   error: null,
 }
@@ -55,35 +56,35 @@ const createView = (state) => {
   }
 
   const renderFeeds = (feeds) => {
-  const { feedsContainer } = elements
-  
-  if (feeds.length === 0) {
-    feedsContainer.innerHTML = ''
-    return
-  }
-  
-  const feedsHTML = feeds.map((feed) => `
-    <div class="mb-4">
-      <h3 class="h5"><b>${feed.title}</b></h3>
-      <p class="mb-2">${feed.description}</p>
-    </div>
-  `).join('')
-  
-  feedsContainer.innerHTML = `
-    <div class="row">
-      <div class="col">
-        <div class="card border-0">
-          <div class="card-body p-0">
-            <h2 class="h4 mb-3"><b>Фиды</b></h2>
-            ${feedsHTML}
+    const { feedsContainer } = elements
+    
+    if (feeds.length === 0) {
+      feedsContainer.innerHTML = ''
+      return
+    }
+    
+    const feedsHTML = feeds.map((feed) => `
+      <div class="mb-4">
+        <h3 class="h5"><b>${feed.title}</b></h3>
+        <p class="mb-2">${feed.description}</p>
+      </div>
+    `).join('')
+    
+    feedsContainer.innerHTML = `
+      <div class="row">
+        <div class="col">
+          <div class="card border-0">
+            <div class="card-body p-0">
+              <h2 class="h4 mb-3"><b>Фиды</b></h2>
+              ${feedsHTML}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  `
-}
+    `
+  }
 
-const renderPosts = (posts) => {
+  const renderPosts = (posts, readPostsIds) => {
   const { postsContainer } = elements
   
   if (posts.length === 0) {
@@ -91,16 +92,23 @@ const renderPosts = (posts) => {
     return
   }
   
-  const postsHTML = posts.map((post) => `
-    <div class="mb-3 border-bottom pb-3 d-flex justify-content-between align-items-start">
-      <a href="${post.link}" class="link-primary text-decoration-none" target="_blank" rel="noopener noreferrer">
-        <b>${post.title}</b>
-      </a>
-      <button type="button" class="btn btn-outline-primary btn-sm" data-id="${post.id}">
-        Просмотр
-      </button>
-    </div>
-  `).join('')
+  const postsHTML = posts.map((post) => {
+    const isRead = readPostsIds.has(post.id)
+    const fontWeightClass = isRead ? 'fw-normal' : 'fw-bold'
+    const linkColorClass = isRead ? 'link-secondary' : 'link-primary'
+    
+    return `
+      <div class="mb-3 border-bottom pb-3 d-flex justify-content-between align-items-start">
+        <a href="${post.link}" class="${linkColorClass} text-decoration-none ${fontWeightClass}" 
+           target="_blank" rel="noopener noreferrer" data-post-id="${post.id}">
+          ${post.title}
+        </a>
+        <button type="button" class="btn btn-outline-primary btn-sm" data-post-id="${post.id}">
+          Просмотр
+        </button>
+      </div>
+    `
+  }).join('')
   
   postsContainer.innerHTML = `
     <div class="row">
@@ -133,8 +141,8 @@ const renderPosts = (posts) => {
       renderFeeds(value)
     }
     
-    if (path === 'posts') {
-      renderPosts(value)
+    if (path === 'posts' || path === 'readPostsIds') {
+      renderPosts(watchedState.posts, watchedState.readPostsIds)
     }
     
     if (path === 'error') {
