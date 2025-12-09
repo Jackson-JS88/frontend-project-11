@@ -4,7 +4,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Jackson-JS88_frontend-project-11&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Jackson-JS88_frontend-project-11)
 
 ## Deployed Application
-Live demo: https://frontend-project-11-dt46iy63e-evgeniys-projects-2887efb2.vercel.app
+Live demo: https://frontend-project-11-jvz2eybbp-evgeniys-projects-2887efb2.vercel.app
 
 ## Описание
 
