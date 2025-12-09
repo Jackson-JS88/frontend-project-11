@@ -1,4 +1,5 @@
 import './style.css'
+import './i18n.js'
 import validateURL from './lib/validator.js'
 import { fetchRSS, fetchRSSForUpdate } from './lib/parser.js'
 import { createView, initialState } from './lib/view.js'
@@ -9,8 +10,6 @@ const { watchedState, elements } = createView(initialState)
 const resetForm = () => {
   elements.input.value = ''
   elements.input.focus()
-  watchedState.form.state = 'filling'
-  watchedState.form.error = null
 }
 
 const addFeedWithPosts = (url, feedData) => {
@@ -115,7 +114,7 @@ elements.form.addEventListener('submit', (event) => {
 })
 
 elements.input.addEventListener('input', () => {
-  if (watchedState.form.state === 'invalid') {
+  if (watchedState.form.state === 'invalid' || watchedState.form.state === 'valid') {
     watchedState.form.state = 'filling'
     watchedState.form.error = null
     watchedState.error = null
@@ -123,7 +122,6 @@ elements.input.addEventListener('input', () => {
 })
 
 document.addEventListener('click', (event) => {
-  // Обработчик кнопки "Просмотр"
   if (event.target.classList.contains('btn-outline-primary') && event.target.textContent.trim() === 'Просмотр') {
     const postId = event.target.dataset.postId
     const post = watchedState.posts.find(p => p.id === postId)
@@ -133,7 +131,6 @@ document.addEventListener('click', (event) => {
     }
   }
   
-  // Обработчик клика на ссылку поста
   if (event.target.matches('.posts a[data-post-id]')) {
     const postId = event.target.dataset.postId
     watchedState.readPostsIds.add(postId)
