@@ -39,11 +39,9 @@ const fetchRSS = (url) => {
       return parseRSS(response.data.contents)
     })
     .catch((error) => {
-      // Если это ошибка от parseRSS, передаем ее дальше
       if (error.message === 'parseError') {
         return Promise.reject(error)
       }
-      // Все остальное - сетевые ошибки
       return Promise.reject(new Error('networkError'))
     })
 }
