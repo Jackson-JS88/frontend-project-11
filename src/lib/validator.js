@@ -10,7 +10,7 @@ yup.setLocale({
   },
 })
 
-const createRssSchema = (feeds) => yup.string()
+const createRssSchema = feeds => yup.string()
   .required()
   .url()
   .notOneOf(feeds)

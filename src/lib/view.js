@@ -25,7 +25,7 @@ const createView = (state) => {
 
   const renderForm = (formState) => {
     const { input, feedback, submit } = elements
-    
+
     input.classList.remove('is-invalid', 'is-valid')
     feedback.textContent = ''
     feedback.className = 'feedback m-0 position-absolute small'
@@ -37,19 +37,19 @@ const createView = (state) => {
         feedback.className = 'feedback m-0 position-absolute small text-info'
         feedback.textContent = i18next.t('validating')
         break
-      
+
       case 'invalid':
         input.classList.add('is-invalid')
         feedback.className = 'feedback m-0 position-absolute small text-danger'
         feedback.textContent = formState.error ? i18next.t(formState.error) : i18next.t('unknownError')
         break
-      
+
       case 'valid':
         input.classList.add('is-valid')
         feedback.className = 'feedback m-0 position-absolute small text-success'
         feedback.textContent = i18next.t('success')
         break
-      
+
       default:
         break
     }
@@ -57,19 +57,19 @@ const createView = (state) => {
 
   const renderFeeds = (feeds) => {
     const { feedsContainer } = elements
-    
+
     if (feeds.length === 0) {
       feedsContainer.innerHTML = ''
       return
     }
-    
-    const feedsHTML = feeds.map((feed) => `
+
+    const feedsHTML = feeds.map(feed => `
       <div class="mb-4">
         <h3 class="h5"><b>${feed.title}</b></h3>
         <p class="mb-2">${feed.description}</p>
       </div>
     `).join('')
-    
+
     feedsContainer.innerHTML = `
       <div class="row">
         <div class="col">
@@ -85,19 +85,19 @@ const createView = (state) => {
   }
 
   const renderPosts = (posts, readPostsIds) => {
-  const { postsContainer } = elements
-  
-  if (posts.length === 0) {
-    postsContainer.innerHTML = ''
-    return
-  }
-  
-  const postsHTML = posts.map((post) => {
-    const isRead = readPostsIds.has(post.id)
-    const fontWeightClass = isRead ? 'fw-normal' : 'fw-bold'
-    const linkColorClass = isRead ? 'link-secondary' : 'link-primary'
-    
-    return `
+    const { postsContainer } = elements
+
+    if (posts.length === 0) {
+      postsContainer.innerHTML = ''
+      return
+    }
+
+    const postsHTML = posts.map((post) => {
+      const isRead = readPostsIds.has(post.id)
+      const fontWeightClass = isRead ? 'fw-normal' : 'fw-bold'
+      const linkColorClass = isRead ? 'link-secondary' : 'link-primary'
+
+      return `
       <div class="mb-3 border-bottom pb-3 d-flex justify-content-between align-items-start">
         <a href="${post.link}" class="${linkColorClass} text-decoration-none ${fontWeightClass}" 
            target="_blank" rel="noopener noreferrer" data-post-id="${post.id}">
@@ -108,9 +108,9 @@ const createView = (state) => {
         </button>
       </div>
     `
-  }).join('')
-  
-  postsContainer.innerHTML = `
+    }).join('')
+
+    postsContainer.innerHTML = `
     <div class="row">
       <div class="col">
         <div class="card border-0">
@@ -122,7 +122,7 @@ const createView = (state) => {
       </div>
     </div>
   `
-}
+  }
 
   const renderError = (error) => {
     const { feedback } = elements
@@ -136,19 +136,19 @@ const createView = (state) => {
     if (path === 'form.state' || path === 'form.error') {
       renderForm(watchedState.form)
     }
-    
+
     if (path === 'feeds') {
       renderFeeds(value)
     }
-    
+
     if (path === 'posts' || path === 'readPostsIds') {
       renderPosts(watchedState.posts, watchedState.readPostsIds)
     }
-    
+
     if (path === 'error') {
       renderError(value)
     }
-    
+
     if (path === 'loading') {
       elements.submit.disabled = value
     }
