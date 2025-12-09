@@ -26,7 +26,7 @@ const parseRSS = (xmlString) => {
 const fetchRSS = (url) => {
   const proxyUrl = `https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}&disableCache=true`
 
-  return axios.get(proxyUrl)
+  return axios.get(proxyUrl, { timeout: 10000 })
     .then((response) => {
       if (response.status !== 200) {
         return Promise.reject(new Error('networkError'))
@@ -39,10 +39,20 @@ const fetchRSS = (url) => {
       return parseRSS(response.data.contents)
     })
     .catch((error) => {
+      if (error.code === 'ERR_NETWORK'
+        || error.code === 'ECONNABORTED'
+        || error.code === 'ETIMEDOUT'
+        || error.message.includes('Network Error')
+        || error.message.includes('network')
+        || error.message.includes('internet')) {
+        return Promise.reject(new Error('networkError'))
+      }
+
       if (error.response) {
         return Promise.reject(new Error('networkError'))
       }
-      return Promise.reject(error)
+
+      return Promise.reject(new Error('networkError'))
     })
 }
 
