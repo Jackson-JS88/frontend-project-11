@@ -95,11 +95,10 @@ const createView = (state) => {
     const postsHTML = posts.map((post) => {
       const isRead = readPostsIds.has(post.id)
       const fontWeightClass = isRead ? 'fw-normal' : 'fw-bold'
-      const linkColorClass = isRead ? 'link-secondary' : 'link-primary'
 
       return `
       <div class="mb-3 border-bottom pb-3 d-flex justify-content-between align-items-start">
-        <a href="${post.link}" class="${linkColorClass} text-decoration-none ${fontWeightClass}" 
+        <a href="${post.link}" class="${fontWeightClass}" 
            target="_blank" rel="noopener noreferrer" data-post-id="${post.id}">
           ${post.title}
         </a>
