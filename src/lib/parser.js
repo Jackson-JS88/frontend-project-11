@@ -38,20 +38,7 @@ const fetchRSS = (url) => {
 
       return parseRSS(response.data.contents)
     })
-    .catch((error) => {
-      if (error.code === 'ERR_NETWORK'
-        || error.code === 'ECONNABORTED'
-        || error.code === 'ETIMEDOUT'
-        || error.message.includes('Network Error')
-        || error.message.includes('network')
-        || error.message.includes('internet')) {
-        return Promise.reject(new Error('networkError'))
-      }
-
-      if (error.response) {
-        return Promise.reject(new Error('networkError'))
-      }
-
+    .catch(() => {
       return Promise.reject(new Error('networkError'))
     })
 }

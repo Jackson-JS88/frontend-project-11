@@ -106,10 +106,15 @@ elements.form.addEventListener('submit', (event) => {
         watchedState.form.state = 'invalid'
         watchedState.form.error = error.errors[0]
       }
-      else {
+      else if (error.message === 'parseError' || error.message === 'networkError') {
         watchedState.form.state = 'invalid'
         watchedState.error = error.message
         watchedState.form.error = error.message
+      }
+      else {
+        watchedState.form.state = 'invalid'
+        watchedState.error = error.message
+        watchedState.form.error = 'unknownError'
       }
     })
 })
