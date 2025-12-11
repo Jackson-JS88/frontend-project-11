@@ -95,32 +95,33 @@ const createView = (state) => {
     const postsHTML = posts.map((post) => {
       const isRead = readPostsIds.has(post.id)
       const fontWeightClass = isRead ? 'fw-normal' : 'fw-bold'
+      const linkColorClass = isRead ? 'link-secondary' : 'link-primary'
 
       return `
-      <div class="mb-3 border-bottom pb-3 d-flex justify-content-between align-items-start">
-        <a href="${post.link}" class="${fontWeightClass}" 
-           target="_blank" rel="noopener noreferrer" data-post-id="${post.id}">
-          ${post.title}
-        </a>
-        <button type="button" class="btn btn-outline-primary btn-sm" data-post-id="${post.id}">
-          Просмотр
-        </button>
-      </div>
-    `
+        <div class="mb-3 border-bottom pb-3 d-flex justify-content-between align-items-start">
+          <a href="${post.link}" class="text-decoration-none ${linkColorClass} ${fontWeightClass}" 
+             target="_blank" rel="noopener noreferrer" data-post-id="${post.id}">
+            ${post.title}
+          </a>
+          <button type="button" class="btn btn-outline-primary btn-sm" data-post-id="${post.id}">
+            Просмотр
+          </button>
+        </div>
+      `
     }).join('')
 
     postsContainer.innerHTML = `
-    <div class="row">
-      <div class="col">
-        <div class="card border-0">
-          <div class="card-body p-0">
-            <h2 class="h4 mb-3"><b>Посты</b></h2>
-            ${postsHTML}
+      <div class="row">
+        <div class="col">
+          <div class="card border-0">
+            <div class="card-body p-0">
+              <h2 class="h4 mb-3"><b>Посты</b></h2>
+              ${postsHTML}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  `
+    `
   }
 
   const renderError = (error) => {

@@ -1,7 +1,8 @@
 import './style.css'
 import './i18n.js'
 import validateURL from './lib/validator.js'
-import { fetchRSS, fetchRSSForUpdate } from './lib/parser.js'
+import { fetchRSS, fetchRSSForUpdate } from './lib/api.js'
+import parseRSS from './lib/parser.js'
 import { createView, initialState } from './lib/view.js'
 import * as bootstrap from 'bootstrap'
 
@@ -52,6 +53,7 @@ const openPostModal = (post) => {
 const updateFeeds = () => {
   watchedState.feeds.forEach((feed) => {
     fetchRSSForUpdate(feed.url)
+      .then(xmlString => parseRSS(xmlString))
       .then((feedData) => {
         const existingPostLinks = watchedState.posts
           .filter(post => post.feedId === feed.id)
@@ -70,9 +72,11 @@ const updateFeeds = () => {
         if (newPosts.length > 0) {
           watchedState.posts.unshift(...newPosts)
         }
+        return Promise.resolve()
       })
       .catch((error) => {
         console.error(`Ошибка обновления фида ${feed.url}:`, error.message)
+        return Promise.reject(error)
       })
   })
 
@@ -94,10 +98,12 @@ elements.form.addEventListener('submit', (event) => {
       watchedState.form.state = 'valid'
       return fetchRSS(url)
     })
+    .then(xmlString => parseRSS(xmlString))
     .then((feedData) => {
       addFeedWithPosts(url, feedData)
       resetForm()
       watchedState.loading = false
+      return Promise.resolve()
     })
     .catch((error) => {
       watchedState.loading = false
@@ -116,6 +122,7 @@ elements.form.addEventListener('submit', (event) => {
         watchedState.error = error.message
         watchedState.form.error = 'unknownError'
       }
+      return Promise.reject(error)
     })
 })
 
