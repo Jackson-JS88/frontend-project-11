@@ -95,18 +95,19 @@ const createView = (state) => {
     const postsHTML = posts.map((post) => {
       const isRead = readPostsIds.has(post.id)
       const fontWeightClass = isRead ? 'fw-normal' : 'fw-bold'
+      const colorClass = isRead ? 'text-muted' : ''
 
       return `
-      <div class="mb-3 border-bottom pb-3 d-flex justify-content-between align-items-start">
-        <a href="${post.link}" class="${fontWeightClass}" 
-           target="_blank" rel="noopener noreferrer" data-post-id="${post.id}">
-          ${post.title}
-        </a>
-        <button type="button" class="btn btn-outline-primary btn-sm" data-post-id="${post.id}">
-          Просмотр
-        </button>
-      </div>
-    `
+  <div class="d-flex justify-content-between align-items-start mb-3">
+    <a href="${post.link}" class="${fontWeightClass} ${colorClass}" 
+       target="_blank" rel="noopener noreferrer" data-post-id="${post.id}">
+      ${post.title}
+    </a>
+    <button type="button" class="btn btn-outline-primary btn-sm" data-post-id="${post.id}">
+      Просмотр
+    </button>
+  </div>
+`
     }).join('')
 
     postsContainer.innerHTML = `
