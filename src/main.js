@@ -72,11 +72,9 @@ const updateFeeds = () => {
         if (newPosts.length > 0) {
           watchedState.posts.unshift(...newPosts)
         }
-        return Promise.resolve()
       })
       .catch((error) => {
         console.error(`Ошибка обновления фида ${feed.url}:`, error.message)
-        return Promise.reject(error)
       })
   })
 
@@ -103,7 +101,6 @@ elements.form.addEventListener('submit', (event) => {
       addFeedWithPosts(url, feedData)
       resetForm()
       watchedState.loading = false
-      return Promise.resolve()
     })
     .catch((error) => {
       watchedState.loading = false
@@ -122,7 +119,6 @@ elements.form.addEventListener('submit', (event) => {
         watchedState.error = error.message
         watchedState.form.error = 'unknownError'
       }
-      return Promise.reject(error)
     })
 })
 
