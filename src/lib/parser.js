@@ -4,8 +4,7 @@ const parseRSS = (xmlString) => {
 
   const parseError = xmlDoc.querySelector('parsererror')
   if (parseError) {
-    const error = new Error('parseError')
-    return Promise.reject(error)
+    throw new Error('parseError')
   }
 
   const feedTitle = xmlDoc.querySelector('channel > title')?.textContent || 'Без названия'
@@ -18,7 +17,7 @@ const parseRSS = (xmlString) => {
     description: item.querySelector('description')?.textContent || 'Без описания',
   }))
 
-  return Promise.resolve({ feedTitle, feedDescription, posts })
+  return { feedTitle, feedDescription, posts }
 }
 
 export default parseRSS

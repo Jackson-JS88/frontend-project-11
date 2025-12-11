@@ -96,18 +96,19 @@ const createView = (state) => {
       const isRead = readPostsIds.has(post.id)
       const fontWeightClass = isRead ? 'fw-normal' : 'fw-bold'
       const colorClass = isRead ? 'text-muted' : ''
+      const allClasses = colorClass ? `${fontWeightClass} ${colorClass}` : fontWeightClass
 
       return `
-  <div class="d-flex justify-content-between align-items-start mb-3">
-    <a href="${post.link}" class="${fontWeightClass} ${colorClass}" 
-       target="_blank" rel="noopener noreferrer" data-post-id="${post.id}">
-      ${post.title}
-    </a>
-    <button type="button" class="btn btn-outline-primary btn-sm" data-post-id="${post.id}">
-      Просмотр
-    </button>
-  </div>
-`
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <a href="${post.link}" class="${allClasses}"
+          target="_blank" rel="noopener noreferrer" data-post-id="${post.id}">
+          ${post.title}
+        </a>
+        <button type="button" class="btn btn-outline-primary btn-sm" data-post-id="${post.id}">
+          Просмотр
+        </button>
+      </div>
+      `
     }).join('')
 
     postsContainer.innerHTML = `

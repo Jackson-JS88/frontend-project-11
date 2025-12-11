@@ -6,20 +6,20 @@ const fetchRSS = (url) => {
   return axios.get(proxyUrl, { timeout: 10000 })
     .then((response) => {
       if (response.status !== 200) {
-        return Promise.reject(new Error('networkError'))
+        throw new Error('networkError')
       }
 
       if (!response.data.contents) {
-        return Promise.reject(new Error('parseError'))
+        throw new Error('parseError')
       }
 
       return response.data.contents
     })
     .catch((error) => {
       if (error.message === 'parseError') {
-        return Promise.reject(error)
+        throw error
       }
-      return Promise.reject(new Error('networkError'))
+      throw new Error('networkError')
     })
 }
 
